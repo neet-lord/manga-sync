@@ -18,6 +18,19 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '-n',
+    '--name',
+    type=str,
+    required=True,
+    dest='name',
+    help=(
+        'The name of the manga source to be used for estate management. '
+        'Typically uses the website from which the source file was generated. '
+        'If your source is mangakakalot.com, just use "-n mangakakalot.com."'
+    )
+)
+
+parser.add_argument(
     '-t',
     '--type',
     dest='source_type',
@@ -31,9 +44,11 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '--temp',
+    '-w',
+    '--workspace',
     type=str,
-    default='./Manga/.tmp',
+    dest='workspace',
+    default='./Manga/',
     help=(
         'The tmp directory for staging manga.'
     )
