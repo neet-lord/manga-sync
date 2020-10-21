@@ -70,7 +70,7 @@ parser.add_argument(
     action='store_true',
     dest='update_source',
     help=(
-        'Would you like to update the source chapter index? '
+        'Update the source chapter index by fetching chapters from the manga\'s url. '
         'If the tool fails to find a functioning chapter index, it forces this option.'
     )
 )
