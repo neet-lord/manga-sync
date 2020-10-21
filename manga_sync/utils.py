@@ -20,7 +20,10 @@ def main(params):
             manga=manga
         )
 
+        update_source = params.update_source or False
+
         estate.synchronize_with_source(
             name=name,
-            url=manga['url']
+            url=manga['url'],
+            update_source=update_source
         )

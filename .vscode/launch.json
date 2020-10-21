@@ -11,7 +11,8 @@
             "program": "manga-sync.py",
             "args": [
                 "-s", "/home/neetlord/Development/Cli/manga-indexer/manga_indexer/data/manganelo.com/manganelo_spider_run1603201272.062909/index.json",
-                "-n", "manganelo.com"
+                "-n", "manganelo.com",
+                "-a", "update_source"
             ],
             "console": "integratedTerminal"
         }

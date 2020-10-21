@@ -1,5 +1,7 @@
 import os, json, pathlib
 
+from json.decoder import JSONDecodeError
+
 from . import MangaSourceEstate
 
 class MangaEstate:
@@ -25,8 +27,6 @@ class MangaEstate:
         self.__home_directory = home_directory
         self.__manga = manga
 
-        self.__estate = None
-
         self.__meta = None
         self.__chapter_index = None
         self.__sources = list()
@@ -38,9 +38,7 @@ class MangaEstate:
             self.__read_estate_fs()
         except EnvironmentError:
             self.__build_estate_fs()
-        except AttributeError:
-            self.__build_estate_fs()
-        except TypeError:
+        except JSONDecodeError:
             self.__build_estate_fs()
         
     def __get_estate_directory(self):
@@ -51,23 +49,18 @@ class MangaEstate:
     
     def __get_sources_directory(self):
         return os.path.join(
-            self.__estate,
+            self.__get_estate_directory(),
             '.sources'
         )
 
     def __get_meta_path(self):
         return os.path.join(
-            self.__estate,
+            self.__get_estate_directory(),
             'meta.json'
         )
 
 
     def __build_estate_fs(self):
-        self.__estate = os.path.join(
-            self.__home_directory,
-            self.__manga['title']
-        )
-
         estate_path = self.__get_estate_directory()
         meta_path = self.__get_meta_path()
         sources_path = self.__get_sources_directory()
@@ -124,13 +117,15 @@ class MangaEstate:
         for source_dir in source_dirs:
             try:
                 source = MangaSourceEstate(
-                    directory=source_dir
+                    directory=os.path.join(
+                        sources_directory,
+                        source_dir
+                    )
                 )
 
                 self.__sources.append(source)
             except EnvironmentError:
                 continue
-
 
     def __dump_meta(self, path):
         estate = open(path, 'w+')
@@ -152,35 +147,44 @@ class MangaEstate:
 
     def __get_source(self, name):
         for source in self.__sources:
-            if source.name == name:
+            if source._get_name() == name:
                 return source
         return None
 
     def __add_source(self, name: str, url: str):
 
         base_directory = self.__get_sources_directory()
+
         directory = os.path.join(
             base_directory,
             name
         )
 
-        source = MangaSourceEstate(
+        # The constructor creates the estate in the 
+        # filesystem if necessary.
+
+        MangaSourceEstate(
             directory=directory,
             name=name,
             url=url
         )
 
-    def synchronize_with_source(self, name: str, url: str):
+    def synchronize_with_source(self, name: str, url: str, update_source: bool):
         source = self.__get_source(
             name
         )
 
         if source == None:
             self.__add_source(name, url)
-            #self.synchronize_with_source(name, url)
+            self.synchronize_with_source(name, url, update_source)
 
-        print('synchronizing with source')
+        chapter_index = source.get_chapter_index(
+            update_source=update_source
+        )
 
-    def get_home_directory(self):
+        self.synchronize_chapters_with_index(
+            chapter_index
+        )
+
+    def synchronize_chapters_with_index(self, chapter_index):
         pass
-

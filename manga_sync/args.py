@@ -58,8 +58,19 @@ parser.add_argument(
     '-d',
     '--destination',
     type=str,
+    dest='destination',
     default='./Manga',
     help=(
         'The destination folder.'
+    )
+)
+
+parser.add_argument(
+    '--update-source',
+    action='store_true',
+    dest='update_source',
+    help=(
+        'Would you like to update the source chapter index? '
+        'If the tool fails to find a functioning chapter index, it forces this option.'
     )
 )

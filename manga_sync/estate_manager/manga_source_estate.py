@@ -1,32 +1,88 @@
+import os, pathlib, json
+
 class MangaSourceEstate:
     def __init__(self,
-        directory,
+        directory: str,
         name=None,
         url=None
     ):
+        assert isinstance(directory, str)
+
         self.__directory = directory
-        
-        if name is None and url is None:
-            self.__read_fs()
+        self.__meta = {
+            'name': name,
+            'url': url
+        }
+
+        if self.__meta['name'] is None:
+            try:
+                self.__read_fs()
+            except FileNotFoundError:
+                raise ValueError(
+                    'Could not load the meta file. It doesn\'t exist. '
+                    'Please provide the name and url to build the estate.' 
+                )
         else:
             self.__build_fs()
-        
-        self.__meta = None
+
         self.__chapter_index = None
 
-        self.__load_source()
-
     def __build_fs(self):
-        pass
+        path = self.__get_estate_path()
+        
+        if not os.path.isdir(path):
+            os.makedirs(path)
+
+        meta_path = self.__get_meta_path()
+
+        if not os.path.isfile(meta_path):
+            pathlib.Path(meta_path).touch()
+
+        self.__dump_meta()
+
+    def __dump_meta(self):
+        path = self.__get_meta_path()
+
+        meta = open(path, 'w+')
+
+        meta.write(
+            json.dumps(
+                self.__meta,
+                indent=4
+            )
+        )
+
+        meta.close()
 
     def __read_fs(self):
-        pass
+        meta_path = self.__get_meta_path()
+        meta = open(meta_path, 'r')
+        
+        self.__meta = json.loads(
+            meta.read()
+        )
+        meta.close()
 
-    def __load_source(self):
-        pass
+    def __get_estate_path(self):
+        return self.__directory
 
-    def _update_chapter_index(self):
-        pass
+    def __get_meta_path(self):
+        return os.path.join(
+            self.__get_estate_path(),
+            'meta.json'
+        )
+    
+    def _get_name(self):
+        return self.__meta['name']
+    
+    def __update_chapter_index(self):
+        print('updating the chapter index')
 
-    def _get_chapter_index(self):
-        pass
+    def _get_chapter_index(self, update_source):
+        if update_source:
+            self.__update_chapter_index()
+
+        print('fetching chapter index')
+        return ''
+
+
