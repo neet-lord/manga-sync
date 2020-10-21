@@ -1,7 +1,7 @@
 Manga Sync
 ==========
 
-This is a repository that works with manga-indexer (https://github.com/neet-lord/manga-indexer.git) to create a localized manga estate based on the indexes fetched by the indexer.
+This is a repository that works with manga-indexer (https://github.com/neet-lord/manga-indexer.git) to create a localized manga estate based on the indices fetched by the indexer.
 
 To make it simple, it downloads manga, and keeps track of chapters based on a scraped index.
 
