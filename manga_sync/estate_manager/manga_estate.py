@@ -178,7 +178,7 @@ class MangaEstate:
             self.__add_source(name, url)
             self.synchronize_with_source(name, url, update_source)
 
-        chapter_index = source.get_chapter_index(
+        chapter_index = source._get_chapter_index(
             update_source=update_source
         )
 
