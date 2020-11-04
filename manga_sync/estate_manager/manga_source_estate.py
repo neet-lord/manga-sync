@@ -40,6 +40,7 @@ class MangaSourceEstate:
 
         self.__dump_meta()
 
+
     def __dump_meta(self):
         path = self.__get_meta_path()
 
@@ -63,6 +64,12 @@ class MangaSourceEstate:
         )
         meta.close()
 
+    def __get_chapters_path(self):
+        return os.path.join(
+            self.__get_estate_path(),
+            'chapters.json'
+        )
+    
     def __get_estate_path(self):
         return self.__directory
 
@@ -74,6 +81,60 @@ class MangaSourceEstate:
     
     def _get_name(self):
         return self.__meta['name']
+    
+    def synchronize_with_chapters(self, chapters):
+        chapters_path = self.__get_chapters_path()
+        old_chapters_path = '{0}.old'.format(
+            chapters_path
+        )
+
+        if not os.path.isfile(chapters_path):
+            chapters_store = open(chapters_path, 'w+')
+            
+            chapters_store.write(
+                json.dumps(
+                    chapters,
+                    indent=4
+                )
+            )
+
+            chapters_store.close()
+            
+            return True
+        else:
+            "Copy the existing chapter store at {filename} to {filename}.old"
+            "After that, store store the new chapters list at {filename}."
+
+            chapters_store = open(chapters_path, 'r')
+            
+            source_chapters = json.loads(
+                chapters_store.read()
+            )
+
+            chapters_store.close()
+
+            old_chapters_store = open(old_chapters_path, 'w+')
+
+            old_chapters_store.write(
+                json.dumps(
+                    source_chapters,
+                    indent=4
+                )
+            )
+
+            old_chapters_store.close()
+
+            chapters_store = open(chapters_path, 'w+')
+            
+            chapters_store.write(
+                json.dumps(
+                    chapters,
+                    indent=4
+                )
+            )
+
+            chapters_store.close()
+
     
     def __update_chapter_index(self):
         print('updating the chapter index')

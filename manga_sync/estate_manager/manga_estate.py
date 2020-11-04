@@ -166,6 +166,8 @@ class MangaEstate:
             url=url
         )
 
+        self.__load_sources()
+
     def update_estate(self, name: str, url: str):
         source = self.__get_source(
             name
@@ -186,6 +188,10 @@ class MangaEstate:
             
             source = self.__get_source(
                 name
+            )
+
+            source.synchronize_with_chapters(
+                chapters
             )
 
     def get_chapters(self, name: str, url: str, max_mangas: int, max_chapters: int):
