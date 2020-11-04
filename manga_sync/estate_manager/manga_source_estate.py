@@ -77,9 +77,13 @@ class MangaSourceEstate:
     
     def __update_chapter_index(self):
         print('updating the chapter index')
+        # Get specify a new chapter index.
+        # The chapter index only contains the chapter index,
+        # and name.
+        # It is used solely to know how many chapters we have.
 
-    def _get_chapter_index(self, update_source):
-        if update_source:
+    def _get_chapter_index(self, update_estate):
+        if update_estate:
             self.__update_chapter_index()
 
         print('fetching chapter index')

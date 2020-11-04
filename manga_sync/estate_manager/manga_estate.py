@@ -4,6 +4,7 @@ from json.decoder import JSONDecodeError
 
 from . import MangaSourceEstate
 
+
 class MangaEstate:
     def __init__(
         self,
@@ -58,7 +59,6 @@ class MangaEstate:
             self.__get_estate_directory(),
             'meta.json'
         )
-
 
     def __build_estate_fs(self):
         estate_path = self.__get_estate_directory()
@@ -160,31 +160,33 @@ class MangaEstate:
             name
         )
 
-        # The constructor creates the estate in the 
-        # filesystem if necessary.
-
         MangaSourceEstate(
             directory=directory,
             name=name,
             url=url
         )
 
-    def synchronize_with_source(self, name: str, url: str, update_source: bool):
+    def update_estate(self, name: str, url: str):
+        source = self.__get_source(
+            name
+        )
+
+        if source == None:
+            raise EnvironmentError('The source \'{0}\' hasn\'t been setup in the file system properly. Run --update-source first.'.format(name))
+
+        ## Synchronize chapters in estate with source by name <name>.
+
+    def update_source(self, name: str, url: str, chapters: list):
         source = self.__get_source(
             name
         )
 
         if source == None:
             self.__add_source(name, url)
-            self.synchronize_with_source(name, url, update_source)
+            
+            source = self.__get_source(
+                name
+            )
 
-        chapter_index = source._get_chapter_index(
-            update_source=update_source
-        )
-
-        self.synchronize_chapters_with_index(
-            chapter_index
-        )
-
-    def synchronize_chapters_with_index(self, chapter_index):
+    def get_chapters(self, name: str, url: str, max_mangas: int, max_chapters: int):
         pass

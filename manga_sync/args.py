@@ -50,7 +50,7 @@ parser.add_argument(
     dest='workspace',
     default='./Manga/',
     help=(
-        'The tmp directory for staging manga.'
+        'The directory for staging the whole synchronization process.'
     )
 )
 
@@ -66,11 +66,52 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '--update-estate',
+    action='store_true',
+    dest='update_estate',
+    help=(
+        'Update the manga estate by synchronizing it with a given source. '
+        'If the tool fails to find a healthy and functional estate, it forces this option.'
+    )
+)
+
+parser.add_argument(
     '--update-source',
     action='store_true',
     dest='update_source',
     help=(
-        'Update the source chapter index by fetching chapters from the manga\'s url. '
-        'If the tool fails to find a functioning chapter index, it forces this option.'
+        'Update the manga\'s estate source. It requires the -n option and an existing estate.'
+    )
+)
+
+parser.add_argument(
+    '--g',
+    '--get-chapters',
+    action='store_true',
+    dest='get_chapters',
+    help=(
+        'Actually download the chapters from the estate to the destination folder.'
+    )
+)
+
+parser.add_argument(
+    '-c',
+    '--max-fetch-chapters',
+    type=int,
+    dest='max_fetch_chapters',
+    default=-2,
+    help=(
+        'Maximum number of chapters to actually fetch from source and download.'
+    )
+)
+
+parser.add_argument(
+    '-m',
+    '--max-fetch-manga',
+    type=int,
+    dest='max_fetch_manga',
+    default=-2,
+    help=(
+        'Maximum number of mangas to fetch.'
     )
 )

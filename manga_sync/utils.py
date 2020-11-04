@@ -6,7 +6,6 @@ from .estate_manager import (
 )
 
 def main(params):
-    # read source file
     source = open(params.source)
     manga_list= json.loads(source.read())
     source.close()
@@ -21,9 +20,30 @@ def main(params):
         )
 
         update_source = params.update_source or False
+        update_estate = params.update_estate or False
 
-        estate.synchronize_with_source(
-            name=name,
-            url=manga['url'],
-            update_source=update_source
-        )
+        if update_source:
+            estate.update_source(
+                name=name,
+                url=manga['url'],
+                chapters=['chapters']
+            )
+
+        if update_estate:
+            estate.update_estate(
+                name=name,
+                url=manga['url']
+            )
+
+        get_chapters = params.get_chapters or False
+
+        if get_chapters:
+            max_mangas = params.max_fetch_mangas
+            max_chapters = params.max_fetch_chapters
+
+            estate.get_chapters(
+                name=name,
+                url=manga['url'],
+                max_mangas=max_mangas,
+                max_chapters=max_chapters
+            )
