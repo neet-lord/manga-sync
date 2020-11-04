@@ -26,7 +26,7 @@ def main(params):
             estate.update_source(
                 name=name,
                 url=manga['url'],
-                chapters=['chapters']
+                chapters=manga['chapters']
             )
 
         if update_estate:
