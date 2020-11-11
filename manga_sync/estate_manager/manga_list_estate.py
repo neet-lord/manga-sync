@@ -8,29 +8,17 @@ from . import MangaSourceEstate
 class MangaEstate:
     def __init__(
         self,
-        home_directory:str=None,
-        manga:dict=None
+        home_directory:str=None
     ):
         if not isinstance(home_directory, str):
             raise ValueError(
                 'Home directory must be a string representing a file path.'
             )
 
-        if not isinstance(manga, dict):
-            raise ValueError(
-                'Manga must be a dict that follows the standard.'
-            )
-
-        self.__verify_meta(
-            manga
-        )
-
         self.__home_directory = home_directory
-        self.__manga = manga
-
-        self.__meta = None
-        self.__chapter_index = None
-        self.__sources = list()
+        self.__manga_index = None
+        
+        self.__manga_estates = list()
 
         self.__load_estate()
 
@@ -41,64 +29,16 @@ class MangaEstate:
             self.__build_estate_fs()
         except JSONDecodeError:
             self.__build_estate_fs()
-        
-    def __get_estate_directory(self):
+    
+    def __get_manga_index_path(self):
         return os.path.join(
             self.__home_directory,
-            self.__manga['title']
-        )
-    
-    def __get_sources_directory(self):
-        return os.path.join(
-            self.__get_estate_directory(),
-            '.sources'
-        )
-
-    def __get_meta_path(self):
-        return os.path.join(
-            self.__get_estate_directory(),
-            'meta.json'
-        )
-
-    def __get_chapters_path(self):
-        return os.path.join(
-            self.__get_estate_directory(),
-            'chapters.json'
-        )
-    
-    def __get_config_path(self):
-        return os.path.join(
-            self.__get_estate_directory(),
-            'config.json'
+            'manga_list.json'
         )
 
     def __build_estate_fs(self):
-        estate_path = self.__get_estate_directory()
-        meta_path = self.__get_meta_path()
-        sources_path = self.__get_sources_directory()
-
-        for path in [ estate_path, sources_path ]:
-            if not os.path.isdir(path):
-                os.makedirs(path)
-
-        if not os.path.isfile(meta_path):
-            pathlib.Path(meta_path).touch()
-        
-        self.__dump_meta(meta_path)
-
-    def __read_estate_fs(self):
-        meta_path = self.__get_meta_path()
-
-        with open(meta_path) as meta:
-            self.__meta = json.loads(
-                meta.read()
-            )
-
-        self.__verify_meta(
-            self.__meta
-        )
-
-        self.__load_sources()
+        if not os.path.exists(self.__home_directory):
+            os.makedirs(self.__home_directory)
 
     def __verify_meta(self, obj: dict):
         keys = obj.keys()

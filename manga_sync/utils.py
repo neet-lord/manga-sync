@@ -6,10 +6,12 @@ from .estate_manager import (
 )
 
 def main(params):
-    source = open(params.source)
-    manga_list= json.loads(source.read())
-    source.close()
-
+    if source:
+        source = open(params.source)
+        manga_list= json.loads(source.read())
+        source.close()
+    else:
+        
     workspace = params.workspace
     name = params.name
 

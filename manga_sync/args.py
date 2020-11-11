@@ -9,7 +9,6 @@ parser.add_argument(
     '-s',
     '--source',
     type=str,
-    required=True,
     dest='source',
     help=(
         'Source file for the manga.'
